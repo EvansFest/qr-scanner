@@ -77,7 +77,7 @@
       { fps: 10, qrbox: { width: 250, height: 250 } },
       (decodedText) => {
         reader.stop();
-        fetch("https://script.google.com/macros/s/AKfycbywG-we-9YStMwm5rDdZ1rJNQKQW14LDjQVqbrDFEujBR2ThRnsvzkmWpRTNZxwjKKoZQ/exec?ref=" + encodeURIComponent(decodedText))
+        fetch("https://script.google.com/macros/s/AKfycbx-YAdNalu8gkETr3vEIQTnUn1DoBC4aJj7bTC2897tZzewnhw47kYmg5q2-H3xTJhQKw/exec?ref=" + encodeURIComponent(decodedText))
           .then(res => res.json())
           .then(data => {
             if (data.error) {
