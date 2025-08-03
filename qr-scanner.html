@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Evans Fest Ticket Scanner</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+      }
+      #reader {
+        width: 300px;
+        margin: auto;
+      }
+      iframe {
+        border: none;
+        width: 100%;
+        height: 500px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Evans Fest 2026 – Ticket Scanner</h2>
+    <div id="reader"></div>
+    <iframe id="resultFrame" style="display:none;"></iframe>
+
+    <script>
+      const scriptURL = "https://script.google.com/macros/s/AKfycbxJPxi0bCJJFuUW6xPHMe7kWtPG8eQwRNR-IHLykVkwxwqMlMfJMNVco4Doune4rUOL/exec";
+
+      function onScanSuccess(qrCodeMessage) {
+        if (qrCodeMessage.startsWith("REF")) {
+          const url = `${scriptURL}?ref=${encodeURIComponent(qrCodeMessage)}`;
+          document.getElementById("resultFrame").src = url;
+          document.getElementById("resultFrame").style.display = "block";
+        } else {
+          alert("Invalid QR Code. Expected format: REF123456");
+        }
+      }
+
+      const scanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+      scanner.render(onScanSuccess);
+    </script>
+  </body>
+</html>
