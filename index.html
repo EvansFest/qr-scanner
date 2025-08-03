@@ -17,34 +17,83 @@
       margin-bottom: 1rem;
     }
     #reader {
-      width: 600px;
+      width: 320px;
       max-width: 100%;
       border: 2px solid #333;
       border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+    #result {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 400px;
+      text-align: center;
+      display: none;
+    }
+    #next-btn {
+      margin-top: 1rem;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <h1>Evans Fest 2026 - QR Ticket Scanner</h1>
   <div id="reader"></div>
+  <div id="result"></div>
 
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script>
     const reader = new Html5Qrcode("reader");
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbx-YAdNalu8gkETr3vEIQTnUn1DoBC4aJj7bTC2897tZzewnhw47kYmg5q2-H3xTJhQKw/exec";
+
+    function showResult(data) {
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `
+        <h2>✅ Ticket Found</h2>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Weekend Tickets:</strong> ${data.adultTickets} Adult, ${data.childTickets} Child</p>
+        <p><strong>Saturday Tickets:</strong> ${data.satAdultTickets} Adult, ${data.satChildTickets} Child</p>
+        <button id="next-btn" onclick="window.location.href='https://evansfest.github.io/qr-scanner/'">Next Scan</button>
+      `;
+      resultDiv.style.display = "block";
+    }
+
+    function showError(message) {
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `<h2 style="color: red;">❌ ${message}</h2>`;
+      resultDiv.style.display = "block";
+    }
 
     reader.start(
       { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 300, height: 300 } },
-      (decodedText, decodedResult) => {
-        console.log("Scanned:", decodedText);
-
-        // Redirect to the Apps Script page with the REF
-        window.location.href = `${scriptUrl}?ref=${encodeURIComponent(decodedText)}`;
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      (decodedText) => {
+        reader.stop();
+        fetch("https://script.google.com/macros/s/AKfycbywG-we-9YStMwm5rDdZ1rJNQKQW14LDjQVqbrDFEujBR2ThRnsvzkmWpRTNZxwjKKoZQ/exec?ref=" + encodeURIComponent(decodedText))
+          .then(res => res.json())
+          .then(data => {
+            if (data.error) {
+              showError(data.error);
+            } else {
+              showResult(data);
+            }
+          })
+          .catch(err => {
+            showError("Error contacting server.");
+            console.error(err);
+          });
       }
     ).catch(err => {
-      console.error("Camera start failed:", err);
-      alert("❌ Failed to access camera. Please allow camera permissions.");
+      showError("Camera failed to start.");
+      console.error(err);
     });
   </script>
 </body>
