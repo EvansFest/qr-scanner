@@ -1,0 +1,18 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 40px;
+}
+#reader {
+  width: 300px;
+  margin: 0 auto;
+}
+#result {
+  margin-top: 20px;
+  font-size: 18px;
+}
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
