@@ -16,7 +16,9 @@
     h1 {
       margin-bottom: 1rem;
     }
-    #qr-video {
+    #reader {
+      width: 600px;
+      max-width: 90%;
       border: 2px solid #333;
       border-radius: 10px;
     }
@@ -24,43 +26,44 @@
 </head>
 <body>
   <h1>Evans Fest 2026 - QR Ticket Scanner</h1>
-  <!-- 👇 This is the camera display -->
-  <div id="reader" style="width: 600px;"></div>
+  <div id="reader"></div>
 
-  <!-- Load QR scanner library -->
+  <!-- Load QR scanning library -->
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
   <script>
     const reader = new Html5Qrcode("reader");
 
     reader.start(
-      { facingMode: "environment" }, // Rear camera
+      { facingMode: "environment" },
       {
         fps: 10,
         qrbox: { width: 300, height: 300 }
       },
       (decodedText, decodedResult) => {
-  console.log("QR Code:", decodedText);
-  
-  // Optional alert for testing
-  // alert("Scanned: " + decodedText);
+        console.log("Scanned REF:", decodedText);
 
-  // Send REF to Google Script
-  fetch("https://script.google.com/macros/s/AKfycbyK2Radk0l2uU58FVdfCK6ihN_KXyMCXh7FiUpKiUN9yTYaqG8_fn7ryMFWwuBe0G5l/exec?ref=" + encodeURIComponent(decodedText))
-    .then(res => res.json())
-    .then(data => {
-      // Display result
-      if (data.error) {
-        alert("❌ " + data.error);
-      } else {
-        alert("✅ " + data.name + " (" + data.email + ")\nTickets: " + data.adults + " adults, " + data.children + " children");
+        fetch("https://script.google.com/macros/s/AKfycbyK2Radk0l2uU58FVdfCK6ihN_KXyMCXh7FiUpKiUN9yTYaqG8_fn7ryMFWwuBe0G5l/exec?ref=" + encodeURIComponent(decodedText))
+          .then(res => res.json())
+          .then(data => {
+            if (data.error) {
+              alert("❌ " + data.error);
+            } else {
+              alert("✅ " + data.name + " (" + data.email + ")\nTickets: " + data.adults + " adults, " + data.children + " children");
+
+              // Optional: mark as scanned or show confirmation visually
+              // document.getElementById("result").innerText = `✔ ${data.name} - ${data.adults} Adults, ${data.children} Children`;
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            alert("❌ Error contacting server.");
+          });
       }
-    })
-    .catch(err => {
-      alert("❌ Error contacting server.");
-      console.error(err);
+    ).catch(err => {
+      console.error("Camera start failed:", err);
+      alert("Could not access camera. Please check permissions.");
     });
-}
   </script>
 </body>
 </html>
