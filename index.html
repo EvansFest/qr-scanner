@@ -18,7 +18,6 @@
     }
     #reader {
       width: 600px;
-      max-width: 90%;
       border: 2px solid #333;
       border-radius: 10px;
     }
@@ -28,22 +27,20 @@
   <h1>Evans Fest 2026 - QR Ticket Scanner</h1>
   <div id="reader"></div>
 
-  <!-- QR Scanner Library -->
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-
   <script>
     const reader = new Html5Qrcode("reader");
 
     reader.start(
-      { facingMode: "environment" },
+      { facingMode: "environment" }, // Use rear camera
       {
         fps: 10,
         qrbox: { width: 300, height: 300 }
       },
       (decodedText, decodedResult) => {
-        console.log("Scanned REF:", decodedText);
+        console.log("Scanned:", decodedText);
 
-        fetch("https://script.google.com/macros/s/AKfycbyK2Radk0l2uU58FVdfCK6ihN_KXyMCXh7FiUpKiUN9yTYaqG8_fn7ryMFWwuBe0G5l/exec?ref=" + encodeURIComponent(decodedText))
+        fetch("https://script.google.com/macros/s/AKfycbzA3bAC9iOarMeCsUkRe3zLda4UNrlABVdqXS0kmOg4oSX6ahgkdJrUgZ2KB9Ma6-eY/exec?ref=" + encodeURIComponent(decodedText))
           .then(res => res.json())
           .then(data => {
             if (data.error) {
@@ -53,13 +50,13 @@
             }
           })
           .catch(err => {
-            console.error(err);
             alert("❌ Error contacting server.");
+            console.error(err);
           });
       }
     ).catch(err => {
       console.error("Camera start failed:", err);
-      alert("Could not access camera. Please check camera permissions.");
+      alert("❌ Failed to access camera. Please allow camera permissions.");
     });
   </script>
 </body>
