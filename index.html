@@ -1,19 +1,59 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Evans Fest QR Scanner</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Evans Fest 2026 - QR Ticket Scanner</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    h1 {
+      margin-bottom: 1rem;
+    }
+    #qr-video {
+      border: 2px solid #333;
+      border-radius: 10px;
+    }
+  </style>
 </head>
 <body>
-  <div id="container">
-    <h1>Evans Fest 2026 - QR Ticket Scanner</h1>
-    <video id="preview" autoplay></video>
-    <div id="result"></div>
-  </div>
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-  <script src="scanner.js"></script>
+  <h1>Evans Fest 2026 - QR Ticket Scanner</h1>
+  <!-- 👇 This is the camera display -->
+  <div id="reader" style="width: 600px;"></div>
+
+  <!-- Load QR scanner library -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+  <script>
+    const reader = new Html5Qrcode("reader");
+
+    reader.start(
+      { facingMode: "environment" }, // Rear camera
+      {
+        fps: 10,
+        qrbox: { width: 300, height: 300 }
+      },
+      (decodedText, decodedResult) => {
+        console.log("QR Code:", decodedText);
+        alert("Scanned: " + decodedText);
+
+        // Optional: send to Google Script
+        // fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?ref=" + encodeURIComponent(decodedText))
+        //   .then(res => res.json())
+        //   .then(data => console.log("Google Script says:", data));
+      },
+      (errorMessage) => {
+        // console.warn(errorMessage); // too noisy
+      }
+    ).catch(err => {
+      console.error("QR scanner failed:", err);
+    });
+  </script>
 </body>
 </html>
