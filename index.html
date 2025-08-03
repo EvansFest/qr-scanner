@@ -18,6 +18,7 @@
     }
     #reader {
       width: 600px;
+      max-width: 100%;
       border: 2px solid #333;
       border-radius: 10px;
     }
@@ -30,29 +31,16 @@
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script>
     const reader = new Html5Qrcode("reader");
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbywG-we-9YStMwm5rDdZ1rJNQKQW14LDjQVqbrDFEujBR2ThRnsvzkmWpRTNZxwjKKoZQ/exec";
 
     reader.start(
-      { facingMode: "environment" }, // Use rear camera
-      {
-        fps: 10,
-        qrbox: { width: 300, height: 300 }
-      },
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 300, height: 300 } },
       (decodedText, decodedResult) => {
         console.log("Scanned:", decodedText);
 
-        fetch("https://script.google.com/macros/s/AKfycbywG-we-9YStMwm5rDdZ1rJNQKQW14LDjQVqbrDFEujBR2ThRnsvzkmWpRTNZxwjKKoZQ/exec?ref=" + encodeURIComponent(decodedText))
-          .then(res => res.json())
-          .then(data => {
-            if (data.error) {
-              alert("❌ " + data.error);
-            } else {
-              alert("✅ " + data.name + " (" + data.email + ")\nTickets: " + data.adults + " adults, " + data.children + " children");
-            }
-          })
-          .catch(err => {
-            alert("❌ Error contacting server.");
-            console.error(err);
-          });
+        // Redirect to the Apps Script page with the REF
+        window.location.href = `${scriptUrl}?ref=${encodeURIComponent(decodedText)}`;
       }
     ).catch(err => {
       console.error("Camera start failed:", err);
