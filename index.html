@@ -57,11 +57,16 @@
       const resultDiv = document.getElementById("result");
       resultDiv.innerHTML = `
         <h2>✅ Ticket Found</h2>
-        <p><strong>Name:</strong> ${data.name}</p>
-        <p><strong>Email:</strong> ${data.email}</p>
-        <p><strong>Weekend Tickets:</strong> ${data.adultTickets} Adult, ${data.childTickets} Child</p>
-        <p><strong>Saturday Tickets:</strong> ${data.satAdultTickets} Adult, ${data.satChildTickets} Child</p>
-        <button id="next-btn" onclick="window.location.href='https://evansfest.github.io/qr-scanner/'">Next Scan</button>
+<p><strong>Name:</strong> ${data.name}</p>
+<p><strong>Email:</strong> ${data.email}</p>
+<h3><strong>Weekend Tickets:</strong></h3>
+<p><strong><span style="color: #339966;">${data.adultTickets} Adult, </span></strong></p>
+<p><strong><span style="color: #ff0000;">${data.childTickets} Child</span></strong></p>
+<h3><strong>Saturday Tickets:</strong></h3>
+<p><strong><span style="color: #ff9900;">${data.satAdultTickets} Adult, </span></strong></p>
+<p><strong><span style="color: #ff00ff;">${data.satChildTickets} Child</span></strong></p>
+<p>&nbsp;</p>
+<p><button id="next-btn">Next Scan</button></p>
       `;
       resultDiv.style.display = "block";
     }
