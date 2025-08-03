@@ -28,39 +28,39 @@
   <h1>Evans Fest 2026 - QR Ticket Scanner</h1>
   <div id="reader"></div>
 
-  <!-- Load QR scanning library -->
+  <!-- QR Scanner Library -->
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
   <script>
-  const reader = new Html5Qrcode("reader");
+    const reader = new Html5Qrcode("reader");
 
-  reader.start(
-    { facingMode: "environment" },
-    {
-      fps: 10,
-      qrbox: { width: 300, height: 300 }
-    },
-    (decodedText, decodedResult) => {
-      console.log("Scanned REF:", decodedText);
+    reader.start(
+      { facingMode: "environment" },
+      {
+        fps: 10,
+        qrbox: { width: 300, height: 300 }
+      },
+      (decodedText, decodedResult) => {
+        console.log("Scanned REF:", decodedText);
 
-      fetch("https://script.google.com/macros/s/AKfycbyK2Radk0l2uU58FVdfCK6ihN_KXyMCXh7FiUpKiUN9yTYaqG8_fn7ryMFWwuBe0G5l/exec?ref=" + encodeURIComponent(decodedText))
-        .then(res => res.json())
-        .then(data => {
-          if (data.error) {
-            alert("❌ " + data.error);
-          } else {
-            alert("✅ " + data.name + " (" + data.email + ")\nTickets: " + data.adults + " adults, " + data.children + " children");
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          alert("❌ Error contacting server.");
-        });
-    }
-  ).catch(err => {
-    console.error("Camera start failed:", err);
-    alert("Could not access camera. Please check permissions.");
-  });
-</script>
+        fetch("https://script.google.com/macros/s/AKfycbyK2Radk0l2uU58FVdfCK6ihN_KXyMCXh7FiUpKiUN9yTYaqG8_fn7ryMFWwuBe0G5l/exec?ref=" + encodeURIComponent(decodedText))
+          .then(res => res.json())
+          .then(data => {
+            if (data.error) {
+              alert("❌ " + data.error);
+            } else {
+              alert("✅ " + data.name + " (" + data.email + ")\nTickets: " + data.adults + " adults, " + data.children + " children");
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            alert("❌ Error contacting server.");
+          });
+      }
+    ).catch(err => {
+      console.error("Camera start failed:", err);
+      alert("Could not access camera. Please check camera permissions.");
+    });
+  </script>
 </body>
 </html>
