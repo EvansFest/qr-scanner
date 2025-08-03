@@ -40,7 +40,7 @@
       (decodedText, decodedResult) => {
         console.log("Scanned:", decodedText);
 
-        fetch("https://script.google.com/macros/s/AKfycbw-Nm69GjF8iIi4gFc9T_p6NCrqfoIzuImUZ4x7TSEM1dB1WlFk037DoExB2gjK7Wtk/exec?ref=" + encodeURIComponent(decodedText))
+        fetch("https://script.google.com/macros/s/AKfycbywG-we-9YStMwm5rDdZ1rJNQKQW14LDjQVqbrDFEujBR2ThRnsvzkmWpRTNZxwjKKoZQ/exec?ref=" + encodeURIComponent(decodedText))
           .then(res => res.json())
           .then(data => {
             if (data.error) {
